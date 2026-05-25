@@ -1,0 +1,52 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/dist/
+backend/build/
+backend/*.egg-info/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Database
+*.sqlite
+*.db
+*.sqlite3
+
+# Cache
+__pycache__/
+.cache/
+*.pyc
+.pytest_cache/
+
+# Misc
+.tmp/
+temp/

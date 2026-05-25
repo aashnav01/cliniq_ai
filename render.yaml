@@ -1,0 +1,35 @@
+services:
+  # ── Backend API (FastAPI) ────────────────────────────────────────────────
+  - type: web
+    name: cliniq-backend
+    env: python
+    region: frankfurt
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: ENVIRONMENT
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: FRONTEND_URL
+        value: https://cliniq-frontend.onrender.com
+
+  # ── Frontend (React/Vite) ────────────────────────────────────────────────
+  - type: web
+    name: cliniq-frontend
+    env: static
+    region: frankfurt
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: "./frontend/dist"
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: cliniq-backend
+          envVarKey: RENDER_EXTERNAL_URL

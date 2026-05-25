@@ -1,0 +1,50 @@
+version: '3.8'
+
+# ClinIQ — Database is MongoDB Atlas (cloud), so no local DB container needed.
+# Only Redis is run locally for optional caching.
+
+services:
+
+  redis:
+    image: redis:7-alpine
+    container_name: cliniq_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: cliniq_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - MONGODB_URI=${MONGODB_URI}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - ENVIRONMENT=production
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: cliniq_frontend
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_URL=${BACKEND_URL:-http://localhost:8000}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  redis_data:

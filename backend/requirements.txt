@@ -1,0 +1,33 @@
+# ── Web framework ─────────────────────────────────────────────────────────────
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+python-multipart==0.0.6
+python-dotenv==1.0.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# ── AI / LLM ──────────────────────────────────────────────────────────────────
+google-generativeai>=0.7.0       # Gemini 2.0 Flash — core LLM for all clinical AI
+
+# Voice transcription (Groq Whisper — kept for superior Indian language STT)
+groq>=0.4.2
+
+# ── Database — MongoDB Atlas ───────────────────────────────────────────────────
+pymongo[srv]>=4.6.0              # MongoDB driver (sync, used for MCP tooling)
+motor>=3.3.0                     # Async MongoDB driver for FastAPI
+
+# ── MCP integration ───────────────────────────────────────────────────────────
+fastmcp                          # FastMCP client for MongoDB MCP server
+
+# ── Caching (optional — app degrades gracefully without Redis) ────────────────
+redis==5.0.1
+
+# ── FHIR support ──────────────────────────────────────────────────────────────
+fhir.resources==7.1.0
+
+# ── PDF generation ────────────────────────────────────────────────────────────
+reportlab==4.1.0
+
+# ── Security ──────────────────────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
