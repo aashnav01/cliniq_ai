@@ -73,7 +73,7 @@ export default function DifferentialDxModule({ onLoadingChange, shiftId }) {
       chips.forEach(c => { init[c] = true })
       setActiveChips(init)
     } catch (e) {
-      setError(e.response?.data?.detail || 'Analysis failed. Is the backend running?')
+      const detail = e.response?.data?.detail; setError(typeof detail === 'string' ? detail : (detail ? JSON.stringify(detail) : 'Analysis failed. Is the backend running?'))
     } finally {
       onLoadingChange(false)
     }
@@ -340,3 +340,4 @@ function DDxCard({ d, confColor, onPushback, pushback, setPushback }) {
     </div>
   )
 }
+

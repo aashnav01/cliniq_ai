@@ -110,7 +110,7 @@ export default function SoapModule({ onLoadingChange, shiftId }) {
         } catch {}
       }
     } catch (e) {
-      setError(e.response?.data?.detail || 'Processing failed. Is the backend running?')
+      const detail = e.response?.data?.detail; setError(typeof detail === 'string' ? detail : (detail ? JSON.stringify(detail) : 'Processing failed. Is the backend running?'))
     } finally {
       onLoadingChange(false)
     }
@@ -451,3 +451,4 @@ function DismissibleFlag({ flag, cfg, idx, onDismiss }) {
     </div>
   )
 }
+
