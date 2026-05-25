@@ -1,3 +1,4 @@
+from typing import Union
 """
 ClinIQ API — v4.0.0
 
@@ -67,21 +68,21 @@ async def startup_db():
 
 class HandoverRequest(BaseModel):
     raw_notes: str
-    shift_id: Optional[str] = None
-    patient_id: Optional[str] = None
+    shift_id: Optional[Union[str, int]] = None
+    patient_id: Optional[Union[str, int]] = None
 
 class SoapRequest(BaseModel):
     raw_notes: str
-    shift_id: Optional[str] = None
-    patient_id: Optional[str] = None
+    shift_id: Optional[Union[str, int]] = None
+    patient_id: Optional[Union[str, int]] = None
 
 class DrugInteractionRequest(BaseModel):
     plan_text: str
 
 class DdxRequest(BaseModel):
     clinical_presentation: str
-    shift_id: Optional[str] = None
-    patient_id: Optional[str] = None
+    shift_id: Optional[Union[str, int]] = None
+    patient_id: Optional[Union[str, int]] = None
 
 class ReferralRequest(BaseModel):
     soap_data: dict
@@ -90,7 +91,7 @@ class ReferralRequest(BaseModel):
 class RapidModeRequest(BaseModel):
     brief_notes: str
     language: Optional[str] = "english"
-    shift_id: Optional[str] = None
+    shift_id: Optional[Union[str, int]] = None
 
 class FeedbackRequest(BaseModel):
     analysis_id: str
@@ -101,13 +102,13 @@ class ShiftStartRequest(BaseModel):
     specialty: Optional[str] = ""
 
 class ShiftEndRequest(BaseModel):
-    shift_id: str
+    shift_id: Union[str, int]
 
 class PatientCreateRequest(BaseModel):
     name: str
-    mrn: Optional[str] = None
-    dob: Optional[str] = None
-    gender: Optional[str] = None
+    mrn: Optional[Union[str, int]] = None
+    dob: Optional[Union[str, int]] = None
+    gender: Optional[Union[str, int]] = None
     weight_kg: Optional[float] = None
     allergies: Optional[List[str]] = []
     renal_function: Optional[str] = "normal"
@@ -115,8 +116,8 @@ class PatientCreateRequest(BaseModel):
 
 class PrescriptionSafetyRequest(BaseModel):
     drugs: List[str]
-    patient_id: Optional[str] = None
-    shift_id: Optional[str] = None
+    patient_id: Optional[Union[str, int]] = None
+    shift_id: Optional[Union[str, int]] = None
     patient_context: Optional[dict] = {}
 
 class ICD10Request(BaseModel):
@@ -226,7 +227,7 @@ async def end_shift(request: ShiftEndRequest):
 
 
 @app.get("/api/shift/{shift_id}/history")
-async def get_shift_history(shift_id: str):
+async def get_shift_history(shift_id: Union[str, int]):
     analyses = await mongo_service.get_shift_analyses(shift_id)
     return {
         "count": len(analyses),
@@ -245,7 +246,7 @@ async def get_shift_history(shift_id: str):
 
 
 @app.get("/api/shift/{shift_id}/discharge-summary")
-async def get_discharge_summary_pdf(shift_id: str):
+async def get_discharge_summary_pdf(shift_id: Union[str, int]):
     """Generate and return a full PDF discharge summary for the shift."""
     shift = await mongo_service.get_shift(shift_id)
     if not shift:
@@ -606,3 +607,4 @@ async def transcribe_audio(file: UploadFile = File(...), language: Optional[str]
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
