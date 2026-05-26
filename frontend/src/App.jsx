@@ -7,6 +7,7 @@ import PrescriptionModule from './components/modules/PrescriptionModule'
 import AnalyticsModule from './components/modules/AnalyticsModule'
 import FhirModule from './components/modules/FhirModule'
 import TimelineModule from './components/modules/TimelineModule'
+import AgentModule from './components/modules/AgentModule'
 import Loader from './components/Loader'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://cliniq-ai-kqfz.onrender.com'
@@ -49,6 +50,7 @@ export default function App() {
         if (e.key === '5') { e.preventDefault(); setActiveModule('analytics') }
         if (e.key === '6') { e.preventDefault(); setActiveModule('fhir') }
         if (e.key === '7') { e.preventDefault(); setActiveModule('timeline') }
+        if (e.key === '8') { e.preventDefault(); setActiveModule('agent') }
       }
       if (e.key === '?' && !e.ctrlKey) {
         document.getElementById('shortcuts-modal')?.classList.toggle('active')
@@ -163,6 +165,7 @@ export default function App() {
         {activeModule === 'analytics' && <AnalyticsModule />}
         {activeModule === 'fhir' && <FhirModule shiftId={shiftId} />}
         {activeModule === 'timeline' && <TimelineModule />}
+        {activeModule === 'agent' && <AgentModule onLoadingChange={handleLoadingChange} />}
       </main>
 
       <Loader loading={loading} text={loaderText} />
@@ -231,6 +234,7 @@ export default function App() {
                 ['Ctrl+5', 'Analytics'],
                 ['Ctrl+6', 'FHIR'],
                 ['Ctrl+7', 'Patient Timeline'],
+                ['Ctrl+8', 'AI Agent'],
                 ['Ctrl+Enter', 'Submit current form'],
                 ['?', 'Toggle this panel'],
               ].map(([key, desc]) => (

@@ -15,6 +15,7 @@ export default function Topbar({ activeModule, onModuleChange, shiftActive, onSt
     { id: 'analytics',   label: '05 Analytics',     icon: '📊' },
     { id: 'fhir',         label: '06 FHIR',          icon: '🏥' },
     { id: 'timeline',     label: '07 Timeline',      icon: '📅' },
+    { id: 'agent',        label: '08 AI Agent',      icon: '🤖' },
   ]
 
   useEffect(() => {
