@@ -352,3 +352,64 @@ function renderDdx(diffs) {
 
   out.appendChild(feedbackRow());
 }
+
+// ──────────────────────────────────────────────
+// MODULE 4 — AI AGENT
+// ──────────────────────────────────────────────
+document.getElementById('runAgent').addEventListener('click', async () => {
+  const query = document.getElementById('agentInput').value.trim();
+  if (!query) return alert('Please enter a query.');
+
+  showLoader('Asking Clinical Agent…');
+  try {
+    const response = await fetch('https://cliniq-ai-kqfz.onrender.com/api/agent/query', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+    
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errText}`);
+    }
+    
+    const data = await response.json();
+    renderAgentResponse(data);
+  } catch (e) {
+    document.getElementById('agentOutput').innerHTML = `<div class="empty-state" style="color:var(--danger)">Error: ${e.message}</div>`;
+  } finally {
+    hideLoader();
+  }
+});
+
+function renderAgentResponse(data) {
+  const out = document.getElementById('agentOutput');
+  out.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'patient-card'; 
+  card.style.animationDelay = '0.05s';
+
+  card.innerHTML = \`
+    <div class="card-header">
+      <span class="patient-name">Agent Insight</span>
+    </div>
+    <div class="card-body">
+      <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">
+        Interpreted as: \${data.interpreted_as || 'N/A'}
+      </div>
+      <div style="font-size: 14px; color: var(--text); margin-bottom: 16px; line-height: 1.6;">
+        \${data.insight || 'No insight provided.'}
+      </div>
+      <div style="display: flex; gap: 12px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+        <span style="background: var(--surface2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);">Count: \${data.count !== undefined ? data.count : 'N/A'}</span>
+        <span style="background: var(--surface2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);">Collection: \${data.collection_queried || 'N/A'}</span>
+      </div>
+    </div>
+    <div class="card-footer" style="display: flex; justify-content: center; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px;">
+      <span style="font-size: 10px; color: var(--accent2); font-family: var(--font-mono); font-weight: 500;">✦ Powered by Gemini 2.0 Flash + MongoDB Atlas</span>
+    </div>
+  \`;
+
+  out.appendChild(card);
+}
